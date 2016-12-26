@@ -1,0 +1,24 @@
+{
+  "name": "windbag-slack",
+  "version": "0.0.1",
+  "description": "My little bot",
+  "main": "index.js",
+  "dependencies": {
+    "botkit": "^0.4.5"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umbrella-anton-karmazin/windbag-slack.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/umbrella-anton-karmazin/windbag-slack/issues"
+  },
+  "homepage": "https://github.com/umbrella-anton-karmazin/windbag-slack#readme"
+}
