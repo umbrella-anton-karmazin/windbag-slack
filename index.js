@@ -2,6 +2,8 @@
 
 const Botkit = require('botkit');
 const randomHappyNewYear = require('./utils/randomHappyNewYear');
+let lastUser;
+let lastChannel;
 
 // Create bot with disabled statistics.
 const controller = Botkit.slackbot({
@@ -15,6 +17,14 @@ controller.spawn({
 }).startRTM();
 
 controller.hears('(.*)', ['message_received', 'ambient'], (bot, message) => {
+
+  if (message.user === lastUser && lastChannel === message.channel) {
+    return false;
+  }
+
+  lastUser = message.user;
+  lastChannel = message.channel;
+
   bot.api.reactions.add({
     timestamp: message.ts,
     channel: message.channel,
