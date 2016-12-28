@@ -1,7 +1,7 @@
 'use strict';
 
-const random = require('./happyNewYear');
+const happyNewYear = require('./happyNewYear');
 
 module.exports = (controller) => {
-  random(controller);
+  happyNewYear(controller);
 };
