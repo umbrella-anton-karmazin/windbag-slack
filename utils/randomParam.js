@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (...icons) => {
-  const choose = Math.floor(Math.random() * icons.length);
+module.exports = (...params) => {
+  const choose = Math.floor(Math.random() * params.length);
 
-  return icons[choose];
+  return params[choose];
 };
