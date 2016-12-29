@@ -4,7 +4,7 @@ const randomParam = require('../utils/randomParam');
 
 module.exports = (controller) => {
 
-  controller.on('bot_channel_join', (bot, message) => {
+  controller.on('bot_channel_join,bot_group_join', (bot, message) => {
 
     const response = randomParam(
       ':metal:, здорова!',
