@@ -15,7 +15,7 @@ module.exports = (controller) => {
     }
 
     // check this year Dec 14 - Dec 31 and Jan 01 - Jan 14
-    if (!betweenDates('12/14', '12/31') && !betweenDates('01/01', '01/14')) {
+    if (!betweenDates('12/14', '12/31') && !betweenDates('01/01', '01/08')) {
       return false;
     }
 
