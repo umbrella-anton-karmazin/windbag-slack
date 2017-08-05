@@ -31,8 +31,11 @@ module.exports = (controller) => {
             function talkWithUser(user, isNew) {
                 if (isNew) {
                     bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем. Смотри, наши правила:');
-                    bot.reply(message, rules);
-                    bot.startPrivateConversation(message, question);
+                    setTimeout(0, () => {
+                        bot.reply(message, rules);
+                        bot.startPrivateConversation(message, question);
+                    });
+
                 } else {
                     switch (user.status) {
                         case 'finish':
@@ -40,16 +43,18 @@ module.exports = (controller) => {
                             break;
                         case 'wait':
                             bot.reply(message, 'Ты все-таки решился, отлично. Напомню правила и начинаем:');
-                            bot.reply(message, rules);
 
                             users.update({name}, {$set: {status: 'start'}}, () => {
+                                bot.reply(message, rules);
                                 bot.startPrivateConversation(message, question);
                             });
                             break;
                         case 'start':
                             bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить, сначала правила:');
-                            bot.reply(message, rules);
-                            bot.startPrivateConversation(message, question);
+                            setTimeout(0, () => {
+                                bot.reply(message, rules);
+                                bot.startPrivateConversation(message, question);
+                            });
                             break;
                         default:
                             bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
