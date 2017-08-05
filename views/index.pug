@@ -50,10 +50,17 @@ html
                       th Статус
                       th Баллы
                   tbody
-                    tr
-                      td
-                      td
-                      td
+                    each user in list
+                      tr
+                        td= user.real_name
+                        if (user.status === 'start')
+                          td В процессе
+                        if (user.status === 'finish')
+                          td Закончил
+                        if (user.status === 'wait')
+                          td Пока не решился
+                        td= user.a
+
     footer#footer.wrapper.style1-alt
       .inner
         ul.menu
