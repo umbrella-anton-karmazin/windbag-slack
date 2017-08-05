@@ -1,4 +1,66 @@
-h1 Участники
-ul
-  each val in list
-    li= val.real_name + ', Статус:' + val.status  + ', баллы:' + val.a
+doctype html
+html
+  head
+    title Umbrella Quizz!
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='assets/css/main.css')
+  body
+    section#sidebar
+      .inner
+        nav
+          ul
+            li
+              a(href='#intro') Куда я попал?
+            li
+              a(href='#party') Участники
+    #wrapper
+      section#intro.wrapper.style1.fullscreen.fade-up
+        .inner
+          h1 Викторина
+          p
+            | Прими участие в розыгрыше крутого приза!
+            | Найди в рабочем слаке бота @windbag, и напиши ему, он тебе все расскажет.
+            | На всякий случай продублирую правила:
+          ul.alt
+            li
+              | Если ответ подразумевает число/цифру писать только это число/цифру без указания чего-то еще (кг, м,
+              | км, дней, детей).
+            li
+              | Если ответ подразумевает дробь, то выражать ее в строчку в виде десятичной дроби (0,1) с запятой.
+            li
+              | Если ответ подразумевает слово, писать слово с маленькой буквы, маленькими буквами.
+            li Если ответ подразумевает букву, пиши только букву (символом).
+            li
+              | Розыгрыш представляет собой 10 задач: 4 на теорию вероятности, 2 на логику, 1 на эрудицию и 3 на
+              | математический расчет.
+          p
+            | Удачи!
+      section#party.wrapper.style1.fade-up
+        .inner
+          h2 Участники
+          p Здесь можно увидеть участников, их статус и кол-во набранных баллов.
+          .style1
+            section
+              .table-wrapper
+                table
+                  thead
+                    tr
+                      th Имя
+                      th Статус
+                      th Баллы
+                  tbody
+                    tr
+                      td
+                      td
+                      td
+    footer#footer.wrapper.style1-alt
+      .inner
+        ul.menu
+          li © Anton Karmazin.
+    script(src='assets/js/jquery.min.js')
+    script(src='assets/js/jquery.scrollex.min.js')
+    script(src='assets/js/jquery.scrolly.min.js')
+    script(src='assets/js/skel.min.js')
+    script(src='assets/js/util.js')
+    script(src='assets/js/main.js')
