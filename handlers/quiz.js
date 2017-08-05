@@ -38,8 +38,12 @@ module.exports = (controller) => {
                                 bot.startPrivateConversation(message, question);
                             });
                             break;
+                        case 'start':
+                            bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить');
+                            bot.startPrivateConversation(message, question);
+                            break;
                         default:
-                            bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :) ');
+                            bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
                             break;
                     }
                 }
@@ -96,14 +100,18 @@ module.exports = (controller) => {
 
             users.findOne({name}, (e, user) => {
                 if (user) {
-                    bot.reply(message, randomParam(
-                        'Хочешь, споем?',
-                        'Как дела?',
-                        'Дяденька, я ведь не настоящий бот',
-                        'Куку',
-                        'Кто это тут у нас?',
-                        'Как погодка?'
-                    ));
+                    if (user.status === 'start') {
+                        bot.reply(message, 'Чтобы продолжить пиши *start*.');
+                    } else {
+                        bot.reply(message, randomParam(
+                            'Хочешь, споем?',
+                            'Как дела?',
+                            'Дяденька, я ведь не настоящий бот',
+                            'Куку',
+                            'Кто это тут у нас?',
+                            'Как погодка?'
+                        ));
+                    }
                 } else {
                     users.insert({name, real_name, status: 'wait', q: 0, a: 0}, () => {
                         bot.reply(message, `Привет, ${welcome}. \nЯ хочу сыграть с тобой в одну игру! Если согласен, пиши *start*.`);
