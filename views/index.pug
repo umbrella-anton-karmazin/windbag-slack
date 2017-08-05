@@ -1,5 +1,4 @@
-html
-  head
-    title= title
-  body
-    h1= message
+h1 Участники
+ul
+  each val in list
+    li= val.real_name + ', Статус:' + val.status  + ', баллы:' + val.a

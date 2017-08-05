@@ -1,6 +1,7 @@
 'use strict';
 
 const Datastore = require('nedb');
+const dbs = {};
 
 /**
  *
@@ -9,10 +10,13 @@ const Datastore = require('nedb');
  * @returns Datastore
  */
 module.exports = (filename, options) => {
-    const params = Object.assign({filename}, options);
+    if (!dbs[filename]) {
+        const params = Object.assign({filename}, options);
 
-    const db = new Datastore(params);
-    db.loadDatabase();
+        const db = new Datastore(params);
+        db.loadDatabase();
 
-    return db;
+        dbs[filename] = db;
+    }
+    return dbs[filename];
 };

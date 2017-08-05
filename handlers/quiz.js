@@ -2,8 +2,8 @@
 
 const randomParam = require('../utils/randomParam');
 const qs = require('../questions.json');
-const messages = require('../repository/db')('messages', {autoload: true});
-const users = require('../repository/db')('users', {autoload: true});
+const messages = require('../repository/db')('db/messages', {autoload: true});
+const users = require('../repository/db')('db/users', {autoload: true});
 
 module.exports = (controller) => {
 
