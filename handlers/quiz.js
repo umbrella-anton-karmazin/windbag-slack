@@ -65,7 +65,7 @@ module.exports = (controller) => {
                         dm.ask(qs[user.q].q, checkAnswer);
                     } else {
                         users.update({name}, {$set: {status: 'finish'}}, () => {
-                            dm.say("А вот и все, вопросы у меня и кончились. Ты можешь посмотреть свои результаты здесь: http://test.ru");
+                            dm.say("А вот и все, вопросы у меня и кончились. Ты можешь посмотреть свои результаты здесь: http://umbr.ml/");
                             dm.next();
                         });
                     }
