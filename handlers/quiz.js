@@ -10,6 +10,8 @@ module.exports = (controller) => {
     controller.hears(['старт', 'start'], ['direct_message'], (bot, message) => {
         bot.api.users.info({user: message.user}, (error, response) => {
             let {name, real_name} = response.user;
+            let welcome = real_name.split(' ').shift();
+
             users.findOne({name}, (e, user) => {
                 if (!user) {
                     users.insert({name, real_name, status: 'start', q: 0, a: 0}, (insertE, insertUser) => {
@@ -32,7 +34,9 @@ module.exports = (controller) => {
                             break;
                         case 'wait':
                             bot.reply(message, 'Ты все-таки решился, отлично, тогда поехали.');
-                            bot.startPrivateConversation(message, question);
+                            users.update({name}, {$set: {status: 'start'}}, () => {
+                                bot.startPrivateConversation(message, question);
+                            });
                             break;
                         default:
                             bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :) ');
@@ -44,6 +48,7 @@ module.exports = (controller) => {
             function question(message, dm) {
                 users.findOne({name}, (e, user) => {
                     if (user.q < qs.length) {
+                        dm.say(`*Вопрос №${+user.q + 1}*:`);
                         dm.ask(qs[user.q].q, checkAnswer);
                     } else {
                         users.update({name}, {$set: {status: 'finish'}}, () => {
@@ -55,6 +60,14 @@ module.exports = (controller) => {
             }
 
             function checkAnswer(message, dm) {
+                dm.say(randomParam(
+                    `Неплохо, ${welcome}!`,
+                    'Принято.',
+                    'Я тоже так считаю.',
+                    `Точно? Ну ладно, ${welcome}`,
+                    'Окееей.'
+                ));
+
                 users.findOne({name}, (e, user) => {
                     const q = qs[user.q];
                     const inc = {q: 1};
@@ -79,7 +92,7 @@ module.exports = (controller) => {
     controller.hears('(.*)', ['direct_message'], (bot, message) => {
         bot.api.users.info({user: message.user}, (error, response) => {
             let {name, real_name} = response.user;
-
+            let welcome = real_name.split(' ').shift();
             messages.insert({name, message: message.text});
 
             users.findOne({name}, (e, user) => {
@@ -94,7 +107,7 @@ module.exports = (controller) => {
                     ));
                 } else {
                     users.insert({name, real_name, status: 'wait', q: 0, a: 0}, () => {
-                        bot.reply(message, 'Привет) Я хочу сыграть с тобой в одну игру! Если согласен, пиши *start*.');
+                        bot.reply(message, `Привет, ${welcome}. \nЯ хочу сыграть с тобой в одну игру! Если согласен, пиши *start*.`);
                     })
                 }
             });
