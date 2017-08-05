@@ -1,5 +1,12 @@
 version: '2'
 services:
+  nginx:
+    build: ./nginx
+    links:
+      - web:web
+    ports:
+      - "80:80"
+
   web:
     build: .
     ports:
