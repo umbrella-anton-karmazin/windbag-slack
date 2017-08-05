@@ -3,6 +3,7 @@ services:
   web:
     build: .
     ports:
-     - "3000:3000"
+      - "3000:3000"
     volumes:
-     - .:/code:Z
+      - .:/code:Z
+      - /code/node_modules
