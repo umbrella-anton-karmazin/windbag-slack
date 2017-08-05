@@ -60,7 +60,7 @@ module.exports = (controller) => {
                     const inc = {q: 1};
 
                     // сохранить ответ для потомков
-                    messages.insert({name, message: message.text, type: 'answer'});
+                    messages.insert({name, message: message.text, type: 'answer', q: q.q, right_a: q.a});
 
                     // TODO: сделать проверку на разные варианты ответов
                     if (q.a === message.text) {
