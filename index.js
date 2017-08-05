@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 
 const Botkit = require('botkit');
 const handlers = require('./handlers');
@@ -13,7 +14,7 @@ const controller = Botkit.slackbot({
 
 // connect the bot to a stream of messages
 controller.spawn({
-  token: 'xoxb-120066405570-aFNQmZEZ4V8WRkFlbKgzNecH'
+  token: process.env.SLACK_BOT_TOKEN
 }).startRTM();
 
 handlers(controller);
