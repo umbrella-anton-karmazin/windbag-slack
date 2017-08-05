@@ -4,6 +4,11 @@ const randomParam = require('../utils/randomParam');
 const qs = require('../questions.json');
 const messages = require('../repository/db')('db/messages', {autoload: true});
 const users = require('../repository/db')('db/users', {autoload: true});
+const rules = `> Если ответ подразумевает число/цифру писать только это число/цифру без указания чего-то еще (кг, м, км, дней, детей).
+> Если ответ подразумевает дробь, то выражать ее в строчку в виде десятичной дроби (0,1) с запятой.
+> Если ответ подразумевает слово, писать слово с маленькой буквы, маленькими буквами.
+> Если ответ подразумевает букву, пиши только букву (символом).
+> Розыгрыш представляет собой 10 задач: 4 на теорию вероятности, 2 на логику, 1 на эрудицию и 3 на математический расчет.`;
 
 module.exports = (controller) => {
 
@@ -25,7 +30,8 @@ module.exports = (controller) => {
 
             function talkWithUser(user, isNew) {
                 if (isNew) {
-                    bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем.');
+                    bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем. Смотри, наши правила:');
+                    bot.reply(message, rules);
                     bot.startPrivateConversation(message, question);
                 } else {
                     switch (user.status) {
@@ -33,13 +39,16 @@ module.exports = (controller) => {
                             bot.reply(message, 'Все-все, ты уже закончил :). Жди результатов.');
                             break;
                         case 'wait':
-                            bot.reply(message, 'Ты все-таки решился, отлично, тогда поехали.');
+                            bot.reply(message, 'Ты все-таки решился, отлично. Напомню правила и начинаем:');
+                            bot.reply(message, rules);
+
                             users.update({name}, {$set: {status: 'start'}}, () => {
                                 bot.startPrivateConversation(message, question);
                             });
                             break;
                         case 'start':
-                            bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить');
+                            bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить, сначала правила:');
+                            bot.reply(message, rules);
                             bot.startPrivateConversation(message, question);
                             break;
                         default:
