@@ -71,12 +71,11 @@ module.exports = (controller) => {
                 users.findOne({name}, (e, user) => {
                     const q = qs[user.q];
                     const inc = {q: 1};
-
+                    const answer = message.text.replace(/[`*\s\"\']/g, '').toLowerCase();
                     // сохранить ответ для потомков
-                    messages.insert({name, message: message.text, type: 'answer', q: q.q, right_a: q.a});
+                    messages.insert({name, message: message.text, answer, type: 'answer', q: q.q, right_a: q.a});
 
-                    // TODO: сделать проверку на разные варианты ответов
-                    if (q.a === message.text) {
+                    if (q.a.indexOf(answer) !==  -1) {
                         inc.a = 1;
                     }
 
