@@ -86,7 +86,7 @@ module.exports = (controller) => {
                     const inc = {q: 1};
                     const answer = message.text.replace(/[`*\s\"\']/g, '').toLowerCase();
                     // сохранить ответ для потомков
-                    messages.insert({name, message: message.text, answer, type: 'answer', q: q.q, right_a: q.a});
+                    messages.insert({name, message: message.text, answer, type: 'answer', q: q.q.substring(0, 30), right_a: q.a});
 
                     if (q.a.indexOf(answer) !==  -1) {
                         inc.a = 1;
