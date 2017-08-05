@@ -1,91 +1,77 @@
 'use strict';
 
 const randomParam = require('../utils/randomParam');
-const QuizUser = require('../model/QuizUser');
 const qs = require('../questions.json');
-const users = {};
+const messages = require('../repository/db')('messages', {autoload: true});
+const users = require('../repository/db')('users', {autoload: true});
 
 module.exports = (controller) => {
 
-    controller.hears(['викторина', 'start', 'поехали'], ['direct_message'], (bot, message) => {
+    controller.hears(['старт', 'start'], ['direct_message'], (bot, message) => {
         bot.api.users.info({user: message.user}, (error, response) => {
             let {name, real_name} = response.user;
-
-            //TODO хранить юзера в бд, а не в объекте
-            // get user by name
-
-            // проверить, если юзер уже закончил, то попращаться
-            if (users[name]) {
-                switch (users[name].getStatus()) {
-                    case 'stop':
-                        bot.reply(message, 'Хочешь продолжить? Ну поехали');
-                        bot.startPrivateConversation(message, question);
-                        break;
-                    case 'finish':
-                        bot.reply(message, 'Все-все, ты уже закончил :). Жди результатов.');
-                        break;
-                    default:
-                        bot.reply(message, 'Хакир чтоле?');
-                        break;
+            users.findOne({name}, (e, user) => {
+                if (!user) {
+                    users.insert({name, real_name, status: 'start', q: 0, a: 0}, (insertE, insertUser) => {
+                        talkWithUser(insertUser, true);
+                    })
+                } else {
+                    talkWithUser(user);
                 }
-            } else {
-                users[name] = new QuizUser(real_name);
-                bot.reply(message, 'Я буду задавать вопросы, а ты отвечай :) \n ' +
-                    'если не знаешь ответа, переходи к следующему вопросу, отправив сообщение *next*');
+            });
 
-                bot.startPrivateConversation(message, question);
+
+            function talkWithUser(user, isNew) {
+                if (isNew) {
+                    bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем.');
+                    bot.startPrivateConversation(message, question);
+                } else {
+                    switch (user.status) {
+                        case 'finish':
+                            bot.reply(message, 'Все-все, ты уже закончил :). Жди результатов.');
+                            break;
+                        case 'wait':
+                            bot.reply(message, 'Ты все-таки решился, отлично, тогда поехали.');
+                            bot.startPrivateConversation(message, question);
+                            break;
+                        default:
+                            bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :) ');
+                            break;
+                    }
+                }
             }
 
-            function question(message, dm, retry) {
-
-                // если еще есть вопросы из списка - задать, иначе попрощаться
-                if (users[name].haveQs(qs.length)) {
-                    // задать вопрос и проверить ответ
-                    if (retry) {
-                        dm.ask("Неправильно, попробуй еще.", checkAnswer);
+            function question(message, dm) {
+                users.findOne({name}, (e, user) => {
+                    if (user.q < qs.length) {
+                        dm.ask(qs[user.q].q, checkAnswer);
                     } else {
-                        dm.ask(users[name].getQ(qs).q, checkAnswer);
+                        users.update({name}, {$set: {status: 'finish'}}, () => {
+                            dm.say("А вот и все, вопросы у меня и кончились. Ты можешь посмотреть свои результаты здесь: http://test.ru");
+                            dm.next();
+                        });
                     }
-                } else {
-                    users[name].finish();
-                    dm.say("А вот и все, вопросы у меня и кончились. Ты можешь посмотреть свои результаты здесь: http://azaza.ru");
-                    dm.next();
-                }
+                });
             }
 
             function checkAnswer(message, dm) {
-                // счетчик попыток
-                users[name].attempt();
+                users.findOne({name}, (e, user) => {
+                    const q = qs[user.q];
+                    const inc = {q: 1};
 
-                console.log(message, 2);
+                    // сохранить ответ для потомков
+                    messages.insert({name, message: message.text, type: 'answer'});
 
-                switch (message.text) {
-                    case 'stop':
-                        users[name].stop();
-                        dm.say("Когда будешь готов - возвращайся. Пиши *start* и мы продолжим.");
-                        break;
-                    case 'score':
-                        dm.say(JSON.stringify(users[name]));
-                        question(message, dm, true);
-                        break;
-                    case 'next':
-                        users[name].next();
-                        dm.say("Что ж ты так. Ну ладно, следующий вопрос...");
+                    // TODO: сделать проверку на разные варианты ответов
+                    if (q.a === message.text) {
+                        inc.a = 1;
+                    }
+
+                    users.update({name}, {$inc: inc}, () => {
                         question(message, dm);
-                        break;
-                    default:
-                        const q = users[name].getQ(qs);
-                        if (q.a === message.text) {
-                            users[name].right();
-                            dm.say("Бинго! Это правильный ответ");
-                            question(message, dm);
-                        } else {
-                            question(message, dm, true);
-                        }
-                        break;
-                }
-
-                dm.next();
+                        dm.next();
+                    });
+                });
             }
         });
     });
@@ -94,18 +80,24 @@ module.exports = (controller) => {
         bot.api.users.info({user: message.user}, (error, response) => {
             let {name, real_name} = response.user;
 
-            if (users[name]) {
-                bot.reply(message, randomParam(
-                    'Хочешь, споем?',
-                    'Как дела?',
-                    'Дяденька, я ведь не настоящий бот',
-                    'Куку',
-                    'Кто это тут у нас?',
-                    'Как погодка?'
-                ));
-            } else {
-                bot.reply(message, 'Привет) Я хочу сыграть с тобой в одну игру! Если согласен. пиши *start*');
-            }
+            messages.insert({name, message: message.text});
+
+            users.findOne({name}, (e, user) => {
+                if (user) {
+                    bot.reply(message, randomParam(
+                        'Хочешь, споем?',
+                        'Как дела?',
+                        'Дяденька, я ведь не настоящий бот',
+                        'Куку',
+                        'Кто это тут у нас?',
+                        'Как погодка?'
+                    ));
+                } else {
+                    users.insert({name, real_name, status: 'wait', q: 0, a: 0}, () => {
+                        bot.reply(message, 'Привет) Я хочу сыграть с тобой в одну игру! Если согласен, пиши *start*.');
+                    })
+                }
+            });
         })
     });
 };
