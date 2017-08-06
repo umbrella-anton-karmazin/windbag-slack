@@ -28,6 +28,8 @@ app.get('/', function (req, res) {
     res.render('index', { list })
   })
 });
+app.use('/favicon.ico', express.static('public/images/favicon.ico'));
+
 app.listen(3000, function () {
   console.log('App listening on port 3000!');
 });
