@@ -23,12 +23,17 @@ handlers(controller);
 app.set("view engine", "pug");
 app.set('views', './views');
 app.use('/static', express.static('public'));
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   users.find({}, (error, list) => {
     res.render('index', { list })
   })
 });
 app.use('/favicon.ico', express.static('public/images/favicon.ico'));
+
+// Handle not found page
+app.use((req, res) => {
+  res.render('error')
+});
 
 app.listen(3000, function () {
   console.log('App listening on port 3000!');
