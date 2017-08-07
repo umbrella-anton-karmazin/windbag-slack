@@ -31,10 +31,10 @@ module.exports = (controller) => {
             function talkWithUser(user, isNew) {
                 if (isNew) {
                     bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем. Смотри, наши правила:');
-                    setTimeout(0, () => {
+                    setTimeout(() => {
                         bot.reply(message, rules);
                         bot.startPrivateConversation(message, question);
-                    });
+                    }, 100);
 
                 } else {
                     switch (user.status) {
@@ -51,10 +51,10 @@ module.exports = (controller) => {
                             break;
                         case 'start':
                             bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить, сначала правила:');
-                            setTimeout(0, () => {
+                            setTimeout(() => {
                                 bot.reply(message, rules);
                                 bot.startPrivateConversation(message, question);
-                            });
+                            }, 100);
                             break;
                         default:
                             bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
@@ -125,6 +125,11 @@ module.exports = (controller) => {
                             'Кто это тут у нас?',
                             'Как погодка?'
                         ));
+                        if (user.status === 'wait') {
+                            setTimeout(() => {
+                                bot.reply(message, '_Просто хочу напомнить, чтобы начать викторину - пиши start_');
+                            }, 100)
+                        }
                     }
                 } else {
                     users.insert({name, real_name, status: 'wait', q: 0, a: 0}, () => {
