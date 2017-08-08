@@ -90,12 +90,12 @@ module.exports = (controller) => {
                     const q = qs[user.q];
                     const inc = {q: 1};
                     const answer = message.text.replace(/[`*\s\"\']/g, '').toLowerCase();
-                    // сохранить ответ для потомков
-                    messages.insert({name, message: message.text, answer, type: 'answer', q: q.q.substring(0, 30), right_a: q.a});
 
                     if (q.a.indexOf(answer) !==  -1) {
                         inc.a = 1;
                     }
+                    // сохранить ответ для потомков
+                    messages.insert({name, message: message.text, answer, type: 'answer', q: q.q.substring(0, 30), num: user.q, is_right: !!inc.a});
 
                     users.update({name}, {$inc: inc}, () => {
                         question(message, dm);
