@@ -34,7 +34,7 @@ module.exports = (controller) => {
                     setTimeout(() => {
                         bot.reply(message, rules);
                         bot.startPrivateConversation(message, question);
-                    }, 100);
+                    }, 300);
 
                 } else {
                     switch (user.status) {
@@ -54,7 +54,7 @@ module.exports = (controller) => {
                             setTimeout(() => {
                                 bot.reply(message, rules);
                                 bot.startPrivateConversation(message, question);
-                            }, 100);
+                            }, 300);
                             break;
                         default:
                             bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
@@ -128,7 +128,7 @@ module.exports = (controller) => {
                         if (user.status === 'wait') {
                             setTimeout(() => {
                                 bot.reply(message, '_Просто хочу напомнить, чтобы начать викторину - пиши start_');
-                            }, 100)
+                            }, 300)
                         }
                     }
                 } else {
