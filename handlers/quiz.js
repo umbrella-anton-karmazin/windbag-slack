@@ -30,7 +30,7 @@ module.exports = (controller) => {
 
             function talkWithUser(user, isNew) {
                 if (isNew) {
-                    bot.reply(message, 'Воу, ты шаришь! Что ж, давай начнем. Смотри, наши правила:');
+                    bot.reply(message, 'Воу, ты шаришь! :dib: Что ж, давай начнем. Смотри, наши правила:');
                     setTimeout(() => {
                         bot.reply(message, rules);
                         bot.startPrivateConversation(message, question);
@@ -39,10 +39,10 @@ module.exports = (controller) => {
                 } else {
                     switch (user.status) {
                         case 'finish':
-                            bot.reply(message, 'Все-все, ты уже закончил :). Жди результатов.');
+                            bot.reply(message, 'Все-все, ты уже закончил :). Жди результатов. :hatiko:');
                             break;
                         case 'wait':
-                            bot.reply(message, 'Ты все-таки решился, отлично. Напомню правила и начинаем:');
+                            bot.reply(message, 'Ты все-таки решился, отлично. :party-hard: Напомню правила и начинаем:');
 
                             users.update({name}, {$set: {status: 'start'}}, () => {
                                 bot.reply(message, rules);
@@ -50,14 +50,14 @@ module.exports = (controller) => {
                             });
                             break;
                         case 'start':
-                            bot.reply(message, 'Возможно, были проблемы с сервером. Дай знать @anton.karmazin. А пока предлагаю продолжить, сначала правила:');
+                            bot.reply(message, 'Возможно, были проблемы с сервером. :doge: Дай знать @anton.karmazin. А пока предлагаю продолжить, сначала правила:');
                             setTimeout(() => {
                                 bot.reply(message, rules);
                                 bot.startPrivateConversation(message, question);
                             }, 300);
                             break;
                         default:
-                            bot.reply(message, 'Хакир чтоле?! Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
+                            bot.reply(message, 'Хакир чтоле?! :bandit: Ну или что-то пошло не так :). Пиши @anton.karmazin, пусть разбирается');
                             break;
                     }
                 }
@@ -70,7 +70,9 @@ module.exports = (controller) => {
                         dm.ask(qs[user.q].q, checkAnswer);
                     } else {
                         users.update({name}, {$set: {status: 'finish'}}, () => {
-                            dm.say("А вот и все, вопросы у меня и кончились. Ты можешь посмотреть свои результаты здесь: http://umbr.ml/");
+                            dm.say(`А вот и все, вопросы закончились. :squirrel:
+Твои результаты: *${+user.a}* правильных ответов!
+Итоги викторины объявят, когда проголосуют все, так что :jdun:.`);
                             dm.next();
                         });
                     }
@@ -81,8 +83,8 @@ module.exports = (controller) => {
                 dm.say(randomParam(
                     `Неплохо, ${welcome}!`,
                     'Принято.',
-                    'Я тоже так считаю.',
-                    `Точно? Ну ладно, ${welcome}`,
+                    'Я тоже так считаю. :pravda_konechno:',
+                    `Точно? Ну ладно, ${welcome} :soydet:`,
                     'Окееей.'
                 ));
 
@@ -119,9 +121,9 @@ module.exports = (controller) => {
                     } else {
                         bot.reply(message, randomParam(
                             'Хочешь, споем?',
-                            'Как дела?',
+                            'Как дела? :blonde_parrot:',
                             'Дяденька, я ведь не настоящий бот',
-                            'Куку',
+                            'Куку :owl:',
                             'Кто это тут у нас?',
                             'Как погодка?'
                         ));
