@@ -45,8 +45,10 @@ module.exports = (controller) => {
                             bot.reply(message, 'Ты все-таки решился, отлично. :party-hard: Напомню правила и начинаем:');
 
                             users.update({name}, {$set: {status: 'start'}}, () => {
-                                bot.reply(message, rules);
-                                bot.startPrivateConversation(message, question);
+                                setTimeout(() => {
+                                    bot.reply(message, rules);
+                                    bot.startPrivateConversation(message, question);
+                                }, 300);
                             });
                             break;
                         case 'start':
@@ -70,7 +72,7 @@ module.exports = (controller) => {
                         dm.ask(qs[user.q].q, checkAnswer);
                     } else {
                         users.update({name}, {$set: {status: 'finish'}}, () => {
-                            dm.say(`А вот и все, вопросы закончились. :squirrel:
+                            dm.say(`А вот и все, вопросы закончились.
 Твои результаты: *${+user.a}* правильных ответов!
 Итоги викторины объявят, когда проголосуют все, так что :jdun:.`);
                             dm.next();
