@@ -1,5 +1,6 @@
 'use strict';
 require('dotenv').config();
+require('newrelic');
 
 const Botkit = require('botkit');
 const handlers = require('./handlers');
