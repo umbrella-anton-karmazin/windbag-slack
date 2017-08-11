@@ -1,6 +1,9 @@
 'use strict';
 require('dotenv').config();
-require('newrelic');
+
+if (process.env.NEWRELIC_KEY) {
+  require('newrelic');
+}
 
 const Botkit = require('botkit');
 const handlers = require('./handlers');
@@ -11,7 +14,8 @@ const users = require('./repository/db')('db/users');
 // Create bot with disabled statistics.
 const controller = Botkit.slackbot({
   debug: false,
-  stats_optout: true
+  stats_optout: true,
+  retry: true
 });
 
 // connect the bot to a stream of messages
