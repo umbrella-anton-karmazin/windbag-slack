@@ -1,9 +1,7 @@
 'use strict';
 
-const quiz = require('./quiz');
-const hello = require('./hello');
+const happyNewYear = require('./happyNewYear');
 
 module.exports = (controller) => {
-  quiz(controller);
-  hello(controller);
+    happyNewYear(controller);
 };

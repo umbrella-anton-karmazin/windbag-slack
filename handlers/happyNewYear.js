@@ -10,6 +10,10 @@ module.exports = (controller) => {
 
   controller.hears('(.*)', ['message_received', 'ambient'], (bot, message) => {
 
+    if (Math.random() > 0.5) {
+      return false;
+    }
+
     if (message.user === lastUser && lastChannel === message.channel) {
       return false;
     }
